@@ -5,7 +5,7 @@
 After Effects を ExtendScript（JSX）ではなく **Python → JSON → JSX** という経路で命令制御する手法を探究。  
 構造定義によるモーショングラフィックス制作の基本構想・実装方針をまとめています。
 
-👉 詳細はこちら：[ae_python_structured_motion.md](./ae_python_structured_motion/ae_python_structured_motion.md)
+👉 詳細はこちら：[ae_python_structured_motion.md]
 
 ---
 
@@ -14,7 +14,7 @@ After Effects を ExtendScript（JSX）ではなく **Python → JSON → JSX** 
 rAthena＋OpenKore によるローカルゲーム環境と自動Bot制御に関する短期検証記録。  
 After Effects との連携構想や、自動制御ログの活用も視野に入れた試験的プロジェクトです。
 
-👉 検証レポート：[python_json_jsx_workflow.md](./python_json_jsx_workflow/python_json_jsx_workflow.md)
+👉 検証レポート：[python_json_jsx_workflow.md]
 
 
 ---
