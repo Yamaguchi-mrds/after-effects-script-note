@@ -14,7 +14,7 @@ After Effects を ExtendScript（JSX）ではなく **Python → JSON → JSX** 
 rAthena＋OpenKore によるローカルゲーム環境と自動Bot制御に関する短期検証記録。  
 After Effects との連携構想や、自動制御ログの活用も視野に入れた試験的プロジェクトです。
 
-👉 検証レポート：[python_json_jsx_workflow.md](./python_json_jsx_workflow.md)
+👉 検証レポート：[VirtualEnv_MotionGraph_Test](./VirtualEnv_MotionGraph_Test.me)
 
 
 ---
@@ -28,13 +28,6 @@ This section explores a method of controlling Adobe After Effects using a struct
 **Python → JSON → JSX**, instead of relying solely on ExtendScript.  
 It proposes a workflow where motion graphics are generated based on logical, reusable data structures.
 
-👉 Read more: [ae_python_structured_motion.md](./ae_python_structured_motion/ae_python_structured_motion.md)
+👉 Read more: [ae_python_structured_motion.md](./ae_python_structured_motion_en.md)
 
----
 
-### 🤖 Virtual Game Environment × Bot Automation × AE Integration
-
-A technical experiment report on building a local game server using rAthena and controlling bots via OpenKore.  
-This experiment also investigates the potential to integrate game bot behavior logs into After Effects for visual representation.
-
-👉 Report here: [python_json_jsx_workflow.md](./python_json_jsx_workflow/python_json_jsx_workflow.md)
