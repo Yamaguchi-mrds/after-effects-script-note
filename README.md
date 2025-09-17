@@ -1,33 +1,32 @@
-## 📘 AE-Py連携開発ノート
+# 🎬 After Effects Script Note
 
-### 🎬 モーショングラフィックス × Python 制御
+After Effects スクリプト開発に関する技術ノートをまとめたリポジトリです。  
+設計検討・実装構想・検証ログを日本語/英語で整理して公開しています。  
 
-After Effects を ExtendScript（JSX）ではなく **Python → JSON → JSX** という経路で命令制御する手法を探究。  
-構造定義によるモーショングラフィックス制作の基本構想・実装方針をまとめています。
-
-👉 詳細はこちら：[ae_python_structured_motion.md](./ae_python_structured_motion.md)
-
----
-
-### 🤖 仮想ゲーム環境 × Bot制御 × AE連携構想
-
-rAthena＋OpenKore によるローカルゲーム環境と自動Bot制御に関する短期検証記録。  
-After Effects との連携構想や、自動制御ログの活用も視野に入れた試験的プロジェクトです。
-
-👉 検証レポート：[VirtualEnv_MotionGraph_Test.md](./VirtualEnv_MotionGraph_Test.md)
-
+This repository is a collection of technical notes on After Effects scripting.  
+It contains design studies, implementation ideas, and experimental logs, documented in both Japanese and English.
 
 ---
 
+## 📂 Contents
 
-## 📘 Content Overview (English Summary)
+### 🔹 AE Python Structured Motion
+独立した構想/実装ドキュメント  
+Standalone project documentation
 
-### 🎬 Motion Graphics × Python Automation
+👉 [AE_Python_Structured_Motion/README.md](./AE_Python_Structured_Motion/README.md)
 
-This section explores a method of controlling Adobe After Effects using a structured approach:  
-**Python → JSON → JSX**, instead of relying solely on ExtendScript.  
-It proposes a workflow where motion graphics are generated based on logical, reusable data structures.
+---
 
-👉 Read more: [ae_python_structured_motion.md](./ae_python_structured_motion_en.md)
+### 🔹 その他のノート / Other Notes
+- 日本語版 👉 [JP/](./JP/)  
+- English 👉 [EN/](./EN/)  
 
+---
 
+## 📝 About
+このリポジトリは AE スクリプト開発に関する研究・設計記録のアーカイブです。  
+新しい実験や検討内容は今後も追加予定です。  
+
+This repository serves as an archive of research and design records for AE scripting.  
+New experiments and studies will continue to be added over time.
