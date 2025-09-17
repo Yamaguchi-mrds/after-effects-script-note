@@ -1,5 +1,6 @@
 *.jsx
 *.py
+*.code-workspace
 
 Tree_archives/
 .obsidian/
