@@ -8,7 +8,19 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
 
 ---
 
-## 📌 Temporal Interpolation（時間補間）について
+📑 目次
+1.Temporal Interpolation（時間補間）
+　値が「時間に沿ってどう変化するか」を決める。スピードグラフに直結。
+
+2.Spatial Interpolation（空間補間）
+　オブジェクトが「どの経路を通るか」を決める。モーションパスに影響。
+
+3.Roving（ロービング）
+　キーフレームの「時間位置」をAEが自動調整し、全体の速度を均一化。
+
+---
+
+## 1.Temporal Interpolation（時間補間）について📌
 - **対象**：すべてのプロパティ（Position / Opacity / Scale など）  
 - **役割**：時間に沿った「値の変化の仕方」を決める  
 - **影響先**：スピードグラフ  
@@ -46,6 +58,17 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
 - Roving → 大きい丸（別枠：時間位置の自動調整）  
 - Hold → 四角  
 
+```jsx
+//ScriptCode
+
+// 取得
+var tInterp = myProp.keyInInterpolationType(k);  
+// → KeyframeInterpolationType.LINEAR / BEZIER / HOLD
+
+// 設定
+myProp.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER);
+```
+
 ### 👉 Temporal Interpolationまとめ
 - Linear：直線・一定速度  
 - Bezier：自由イーズ  
@@ -57,7 +80,7 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
 
 ---
 
-## 📌 Spatial Interpolation（空間補間）について
+## 2.Spatial Interpolation（空間補間）について📌
 - **対象**：Position 系プロパティ専用（モーションパスに影響）  
 - **役割**：オブジェクトが「どの経路を通るか」を決める  
 
@@ -90,6 +113,19 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
   - 方向（角度）＋長さ（インフルエンス）を含む  
   - UIには数値が表示されず、ハンドルの見た目で操作する  
 
+```jsx
+//ScriptCode
+
+// 取得
+var inTan  = myProp.keyInSpatialTangent(k);   // [dx, dy]
+var outTan = myProp.keyOutSpatialTangent(k);  // [dx, dy]
+
+// 設定
+myProp.setSpatialTangentsAtKey(k, [10, 0], [-10, 0]); 
+myProp.setSpatialContinuousAtKey(k, true);    // Continuousフラグ
+myProp.setSpatialAutoBezierAtKey(k, true);    // Autoフラグ
+```
+
 ### 👉 Spatial Interpolationまとめ
 - Spatial = 「軌跡線のカーブ」  
 - Linear → 曲がらない  
@@ -99,7 +135,7 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
 
 ---
 
-## 🟧 Roving（ロービング）について
+## 3.Roving（ロービング）について🟧
 - **対象**：主に位置アニメーション（他プロパティでも設定可）  
 - **役割**：時間軸（横軸）の位置をAEが自動調整してくれる機能  
 - **目的**：全体のスピードを均一にしたり、滑らかに分配する  
@@ -118,7 +154,18 @@ After Effects でスクリプトから **easeKeyFrame のデータをコピー�
 ### 使いどころ
 - 位置アニメーションのモーションパスで  
   「途中のキーはAEに任せて、全体の速度を一定にしたい」時に便利  
-- 例：車が道を走る → 始点と終点を決めて、中間点は「速度均等」で自動配置  
+- 例：車が道を走る → 始点と終点を決めて、中間点は「速度均等」で自動配置 
+
+```jsx
+//ScriptCode
+
+ScriptCoad
+// 取得
+var isRoving = myProp.keyRoving(k);  // true / false
+
+// 設定
+myProp.setRovingAtKey(k, true);
+```
 
 ---
 

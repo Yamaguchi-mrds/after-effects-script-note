@@ -1,134 +1,203 @@
 # About After Effects Keyframe Interpolation
 
 ## ✍️ Overview
-When working with scripts in After Effects to **copy and paste easeKeyFrame data**,  
-the question came up: *which information needs to be transferred together?*  
 
-The three key candidates are **Temporal / Spatial / Roving**.  
-Since some of these terms were not entirely clear in daily use,  
-I researched and整理ed their roles and meanings as a learning note.  
+When copying and pasting **easeKeyFrame data** via script in After Effects,
+the question arises of which information should be transferred along with it.
+Three candidates came up: **Temporal / Spatial / Roving**.
+
+This document summarizes the meaning of each interpolation type and flag as my personal study notes.
 
 ---
 
-## 📌 Temporal Interpolation
-- **Applies to**: All properties (Position / Opacity / Scale, etc.)  
-- **Role**: Defines how values change over time  
-- **Affects**: Speed Graph  
+📑 Table of Contents
 
-### Types & Behavior
-- **Linear**  
-  Icon: Diamond  
-  Values change at a constant speed. Straight interpolation.  
+1. Temporal Interpolation
+   Determines how the value changes over time. Directly tied to the Speed Graph.
 
-- **Bezier**  
-  Icon: Diamond (with editable handles)  
-  Allows manual easing. You can freely add acceleration and deceleration.  
+2. Spatial Interpolation
+   Determines which path the object follows. Affects the Motion Path.
 
-- **Continuous Bezier**  
-  Icon: Diamond  
-  Both handle angles remain aligned in a straight line.  
-  Keeps smoothness while allowing influence adjustments.  
+3. Roving
+   Lets AE automatically adjust the **time positions** of keyframes to even out overall speed.
 
-- **Auto Bezier**  
-  Icon: Small circle  
-  AE automatically creates the smoothest curve.  
-  Once edited, it switches to Continuous.  
+---
 
-- **Hold**  
-  Icon: Square  
-  Holds the value, then jumps to the next keyframe suddenly.  
+## 1. Temporal Interpolation 📌
+
+* **Target**: All properties (Position / Opacity / Scale, etc.)
+* **Role**: Defines how values change over time
+* **Affects**: Speed Graph
+
+### Types and Behavior
+
+* **Linear**
+  Icon: Diamond
+  Changes at a constant rate. Simple linear interpolation.
+
+* **Bezier**
+  Icon: Diamond (with adjustable handles)
+  Allows manual easing. Full control over speed variations.
+
+* **Continuous Bezier**
+  Icon: Diamond
+  In/out handle angles stay aligned. Keeps smoothness while adjusting influence.
+
+* **Auto Bezier**
+  Icon: Small circle
+  AE automatically sets the smoothest curve. Editing converts it to Continuous.
+
+* **Hold**
+  Icon: Square
+  Holds the value until just before the next keyframe, then jumps.
 
 ### Transition Rules
-- Auto → (edit) → Continuous  
-- Continuous → (move one handle) → Bezier  
-- Alt + Click → Linear ⇔ Bezier  
-- Hold → explicit setting only (no natural transitions)  
 
-### Icon Guide
-- Linear / Bezier / Continuous → Diamond  
-- Auto Bezier → Small circle (looks similar to Roving but smaller)  
-- Roving → Large circle (separate: controls timing, not interpolation)  
-- Hold → Square  
+* Auto → (adjust handle) → Continuous
+* Continuous → (adjust one side handle) → Bezier
+* Alt+Click → Linear ⇔ Bezier
+* Hold must be explicitly set (no natural transition)
 
-### 👉 Temporal Interpolation Summary
-- Linear: Straight, constant speed  
-- Bezier: Manual ease, full freedom  
-- Continuous: Smoothness preserved (angles aligned, lengths independent)  
-- Auto: AE auto-adjust; turns into Continuous when edited  
-- Hold: Value holds, then jumps  
+### Icon Distinction
 
-> Temporal = "value × time change curve".  
-> Spatial = "motion path shape curve".  
+* Linear / Bezier / Continuous → Diamond
+* Auto Bezier → Small circle (looks like Roving but smaller)
+* Roving → Large circle (separate: time-position adjustment)
+* Hold → Square
+
+```jsx
+// ScriptCode
+
+// Get
+var tInterp = myProp.keyInInterpolationType(k);  
+// → KeyframeInterpolationType.LINEAR / BEZIER / HOLD
+
+// Set
+myProp.setInterpolationTypeAtKey(k, KeyframeInterpolationType.BEZIER);
+
+```
+
+### 👉 Temporal Summary
+
+* Linear: straight line, constant speed
+* Bezier: free easing
+* Continuous: smooth constraint easing (angles aligned, length free)
+* Auto: AE auto-curve, turns into Continuous when touched
+* Hold: value hold → sudden jump
+
+> Temporal = "value × time curve",
+> Spatial = "path shape curve". They work as a pair.
 
 ---
 
-## 📌 Spatial Interpolation
-- **Applies to**: Position properties only (affects motion path)  
-- **Role**: Defines the trajectory an object follows  
+## 2. Spatial Interpolation 📌
 
-### Types & Behavior
-- **Linear**  
-  Handle: None  
-  Motion path is a straight line. Produces sharp corners.  
+* **Target**: Position properties only (affects Motion Path)
+* **Role**: Defines the path the object follows
 
-- **Bezier**  
-  Handle: Independent In / Out  
-  Handles can move separately. Allows free curved paths.  
+### Types and Behavior
 
-- **Continuous Bezier**  
-  Handle: Angles continuous / lengths independent  
-  Both handle angles align in a straight line. Keeps smoothness while adjustable.  
+* **Linear**
+  No handles
+  Path is straight segments, producing angular motion.
 
-- **Auto Bezier**  
-  Handle: AE controlled  
-  Both angles and lengths are auto-adjusted. Editing switches it to Continuous.  
+* **Bezier**
+  Handles: In / Out independent
+  Each handle can be adjusted separately for free bending.
 
-### Transition Rules (AE behavior)
-- Auto → (handle edit) → Continuous  
-- Continuous → (edit one side) → Bezier  
-- Alt + Click → Linear ⇔ Bezier  
-- Bezier → Continuous → Right-click or scripting required  
+* **Continuous Bezier**
+  Handles: Angle continuous / Length independent
+  Handle angles always stay in a straight line. Smooth curve while adjusting.
+
+* **Auto Bezier**
+  Handles: AE auto-controls
+  Angle and length both optimized automatically. Editing turns it into Continuous.
+
+### Transition Rules (AE’s logic)
+
+* Auto → (handle adjustment) → Continuous
+* Continuous → (one handle adjusted) → Bezier
+* Alt+Click → Linear ⇔ Bezier
+* Bezier → Continuous requires right-click or scripting
 
 ### Internal Data
-- **keyInSpatialTangent / keyOutSpatialTangent**  
-  - `[dx, dy]` (or `[dx, dy, dz]` for 3D)  
-  - Represents direction (angle) + length (influence) as a vector  
-  - Not shown as numbers in UI; visible only as path handles  
 
-### 👉 Spatial Interpolation Summary
-- Spatial = "motion path curve"  
-- Linear → Straight, no bend  
-- Bezier → Fully manual curve  
-- Continuous → Smooth curve with aligned angles  
-- Auto → AE auto-smooth (switches to Continuous when edited)  
+* keyInSpatialTangent / keyOutSpatialTangent
+
+  * `[dx, dy]` (or `[dx, dy, dz]` in 3D) vectors
+  * Encodes direction (angle) and influence (length)
+  * No direct numeric UI values, only visible via handle display
+
+```jsx
+// ScriptCode
+
+// Get
+var inTan  = myProp.keyInSpatialTangent(k);   // [dx, dy]
+var outTan = myProp.keyOutSpatialTangent(k);  // [dx, dy]
+
+// Set
+myProp.setSpatialTangentsAtKey(k, [10, 0], [-10, 0]); 
+myProp.setSpatialContinuousAtKey(k, true);    // Continuous flag
+myProp.setSpatialAutoBezierAtKey(k, true);    // Auto flag
+
+```
+
+### 👉 Spatial Summary
+
+* Spatial = “path curve”
+* Linear → sharp corners
+* Bezier → full manual control
+* Continuous → smooth constrained control
+* Auto → AE auto-curve, turns into Continuous when touched
 
 ---
 
-## 🟧 Roving Keyframes
-- **Applies to**: Mainly Position animation (also works with other properties)  
-- **Role**: AE automatically adjusts the **time positions (x-axis)** of keyframes  
-- **Purpose**: Distributes timing to maintain constant or smooth speed  
+## 3. Roving 🟧
+
+* **Target**: Mainly Position animation (but can be used for other properties)
+* **Role**: AE automatically adjusts time-axis positions of keyframes
+* **Purpose**: Keeps overall speed uniform, or redistributes smoothly
 
 ### Behavior
-- Normal keyframes → Fixed time positions  
-- Roving keyframes → Time becomes flexible, AE redistributes positions  
-- Ensures consistent overall speed across the motion  
 
-### Icon
-- Normal keyframes → Diamond (Linear/Bezier/Continuous), small circle (Auto), or square (Hold)  
-- Roving keyframes → Large circle  
-  - Looks similar to Auto Bezier (small circle) → difference is **size**  
+* Normal keyframes = fixed time position
+* Roving = time position unlocked, becomes fluid
+* AE repositions keyframes to maintain even speed as much as possible
 
-### Use Case
-- Perfect for motion paths where you want AE to balance speed automatically  
-- Example: A car follows a road → Start and end are fixed, intermediate keys are “smoothed” for even speed  
+### Icons
+
+* Normal keys → Diamond (Linear/Bezier/Continuous), Small circle (Auto), Square (Hold)
+* Roving keys → Large circle
+
+  * Looks like Auto Bezier, but larger
+  * Key difference = size of the circle
+
+### Use Cases
+
+* Position animation motion paths where
+  “intermediate keyframes should be evenly distributed by AE”
+* Example: A car driving on a road → Start and end fixed, intermediate points auto-distributed evenly
+
+```jsx
+// ScriptCode
+
+// Get
+var isRoving = myProp.keyRoving(k);  // true / false
+
+// Set
+myProp.setRovingAtKey(k, true);
+
+```
 
 ---
 
-## 📝 Overall Summary
-- **Temporal** → Defines how speed changes over time  
-- **Spatial** → Defines the path shape (straight/curved)  
-- **Roving** → Lets AE balance the timing (x-axis positions)  
+## 📝 Summary
 
-👉 Roving is a special mode: it changes the **time coordinates themselves**,  
-making it a different kind of control than standard interpolation.  
+* **Temporal** → Defines how speed changes
+* **Spatial** → Defines which path is followed
+* **Roving** → Lets AE adjust time positions to even out motion
+
+👉 Roving is a **special mode that makes the time-axis coordinate itself variable**.
+It is fundamentally different from regular keyframes.
+
+---
